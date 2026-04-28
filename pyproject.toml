@@ -1,3 +1,9 @@
+[tool.poetry]
+name = "epistemic-dialectic-engine"
+version = "0.1.0"
+description = "LLM pipeline operationalizing the Mindset Elevation Framework"
+package-mode = false
+
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.backends._legacy:_Backend"
