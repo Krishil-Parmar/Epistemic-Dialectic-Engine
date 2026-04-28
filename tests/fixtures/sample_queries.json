@@ -1,0 +1,70 @@
+{
+  "version": "0.2.0",
+  "queries": [
+    {
+      "id": "anchor_q1",
+      "query": "I am doing an internship at a startup for last 4 months without pay. they really like my work and I have build major production grade components for them. how do I convince them for a paid role with atleast 2000 aud in stipend",
+      "expected_cell": ["Transactional", "Individual"],
+      "expected_target": ["Reciprocal", "Relational"],
+      "notes": "Anchor case. Bot's existing response to this is good and should be reproduced or improved."
+    },
+    {
+      "id": "anchor_q2",
+      "query": "How do I protect my job during layoffs?",
+      "expected_cell": ["Transactional", "Individual"],
+      "expected_target": ["Reciprocal", "Relational"],
+      "notes": "Anchor case. Defensive self-preservation framing."
+    },
+    {
+      "id": "anchor_q3",
+      "query": "My partner isn't pulling their weight on this project. What should I do?",
+      "expected_cell": ["Transactional", "Relational"],
+      "expected_target": ["Collaborative", "Relational"],
+      "notes": "Anchor case. Tests Scope=Relational + low Interaction."
+    },
+    {
+      "id": "boundary_collaborative_systemic",
+      "query": "Our engineering team and the product team keep butting heads on roadmap priorities. How do I get them to work as one unit instead of two warring camps?",
+      "expected_cell": ["Reciprocal", "Systemic"],
+      "expected_target": ["Collaborative", "Systemic"],
+      "notes": "Tests upper-mid range. User already at Systemic scope."
+    },
+    {
+      "id": "stay_override_fraud",
+      "query": "I have evidence my co-founder is running personal expenses through the company card. What should I do?",
+      "expected_cell": ["Transactional", "Relational"],
+      "expected_target": ["Transactional", "Relational"],
+      "expected_decision_type": "stay",
+      "notes": "Tests stay override for fraud/enforcement context. Elevation here would be harmful."
+    },
+    {
+      "id": "low_confidence",
+      "query": "What should I do?",
+      "expected_clarification_needed": true,
+      "notes": "Tests confidence threshold and clarification flow. Too short to classify."
+    },
+    {
+      "id": "competing_company_breach",
+      "query": "My business partner of three years has been quietly setting up a competing company on the side using our shared client list. I have screenshots of the emails. We have a board meeting next week. How do I handle this?",
+      "expected_cell": ["Transactional", "Relational"],
+      "expected_target": ["Transactional", "Relational"],
+      "expected_decision_type": "stay",
+      "expected_signals": ["FRAUD_OR_BREACH", "HOSTILE_COUNTERPARTY"],
+      "notes": "Bug 1 regression test. No literal fraud keywords but context signals should trigger stay override."
+    },
+    {
+      "id": "high_cell_deepen",
+      "query": "We have been building a regenerative agriculture network across Southeast Asia for four years now. Our model has changed how three governments approach food sovereignty policy and two of our founding partners have restructured their entire supply chains around the shared principles we developed together. I am presenting our impact framework at the UN Food Systems Summit next month. How do I frame this so it catalyzes adoption beyond our current network?",
+      "expected_cell": ["Co-Evolutionary", "Universal"],
+      "expected_target": ["Co-Evolutionary", "Universal"],
+      "expected_decision_type": "deepen",
+      "notes": "Bug 4 regression test. User at highest cell. System should deepen, not elevate."
+    },
+    {
+      "id": "clarification_cofounder_weird",
+      "query": "My co-founder is being weird. What should I do?",
+      "expected_clarification_needed": true,
+      "notes": "Bug 2 regression test. Short ambiguous query should trigger clarification with valid probability distribution."
+    }
+  ]
+}

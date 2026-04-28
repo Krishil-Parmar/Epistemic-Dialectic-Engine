@@ -1,0 +1,54 @@
+# config/elevation_policy.yaml
+# v0.1 hand-authored
+
+version: "0.1.0"
+last_updated: "2026-04-28"
+owner: "Krishil Parmar (engineering)"
+
+# Default elevation: +1 on each axis, capped at level 4
+default_policy:
+  rule: "elevate_one_step_each_axis"
+  description: "Move both Interaction and Scope up one level. If already at level 4 on an axis, hold that axis constant. The Pre-Mortem priority defaults to Downside for elevations from level 1 or 2 (where exposure risk is highest) and to Upside for elevations from level 3 (where flywheel logic matters more)."
+  pre_mortem_priority_by_source_level:
+    1: "downside"
+    2: "downside"
+    3: "upside"
+    4: "pivot"
+
+# Stay overrides: contexts where elevation is harmful and the bot must hold position
+stay_overrides:
+  - id: "hostile_negotiation"
+    description: "User is in an adversarial negotiation where the counterparty's incentive structure rewards exploiting trust."
+    triggers:
+      keywords: ["lawsuit", "litigation", "fraud", "bad faith", "deceived", "cheated", "ripped off", "threatened", "blackmail", "retaliat", "sabotag"]
+      signal_triggers: ["HOSTILE_COUNTERPARTY", "POWER_ASYMMETRY_AGAINST_USER"]
+      semantic_signals:
+        - "Counterparty has demonstrably acted against the user's interests"
+        - "Power asymmetry favors counterparty"
+    decision_type: "stay"
+    rationale: "Elevating to Reciprocal or Collaborative thinking in a hostile context exposes the user to further exploitation. Hold at current cell, deliver advice that protects the user's position, and surface the framework consideration as context rather than directive."
+
+  - id: "fraud_or_enforcement"
+    description: "User is investigating, exposing, or enforcing against fraudulent behavior."
+    triggers:
+      keywords: ["embezzlement", "stealing", "investigation", "compliance violation", "regulatory", "personal expenses", "company card", "misappropriat", "competing company", "client list", "diverting", "fictitious", "kickback"]
+      signal_triggers: ["FRAUD_OR_BREACH", "REGULATORY_OR_LEGAL_EXPOSURE"]
+    decision_type: "stay"
+    rationale: "Enforcement contexts require Transactional rigor. Reciprocal or Collaborative framing would compromise the user's evidentiary position."
+
+  - id: "safety_critical"
+    description: "User's safety, or the safety of others, is at stake."
+    triggers:
+      keywords: ["abuse", "harassment", "violence", "threat", "dangerous"]
+      signal_triggers: ["SAFETY_CRITICAL"]
+    decision_type: "stay"
+    rationale: "Safety considerations override elevation logic. Refer to appropriate professional resources where applicable."
+
+# Minimum confidence for a context signal to trigger a stay override
+signal_confidence_threshold: 0.7
+
+# Horizontal moves: cases where the user is at an appropriate level on one axis but needs to shift on the other
+horizontal_overrides: []  # Phase 2: populate based on observed cohort patterns
+
+# Deepening moves: user is at a high cell but the response should reinforce rather than elevate
+deepen_overrides: []  # Phase 2: populate based on observed cohort patterns

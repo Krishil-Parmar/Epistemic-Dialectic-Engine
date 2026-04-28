@@ -1,0 +1,17 @@
+layer1_classifier:
+  provider: "google"
+  model: "gemini-3.1-pro-preview"
+  temperature: 0.0
+  max_tokens: 10000
+
+layer3_generator:
+  provider: "google"
+  model: "gemini-3.1-pro-preview"
+  temperature: 0.4
+  max_tokens: 10000
+
+layer4_critique:
+  provider: "google"
+  model: "gemini-3.1-pro-preview"
+  temperature: 0.0
+  max_tokens: 10000

@@ -1,0 +1,9 @@
+classifier:
+  min_confidence_for_proceed: 0.60
+  min_confidence_for_stay_decision: 0.75
+
+critique:
+  min_target_cell_match: 0.70
+  min_premortem_completeness: 0.80
+  min_instruction_adherence: 0.75
+  max_refinement_loops: 2
