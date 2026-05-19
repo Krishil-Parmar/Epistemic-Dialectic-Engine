@@ -17,8 +17,29 @@ st.caption("Mindset Elevation Framework — v0.1 Demo")
 
 
 @st.cache_resource
+def get_event_loop() -> asyncio.AbstractEventLoop:
+    # A single persistent event loop is required so the async HTTP connection
+    # pools inside the cached LLM clients remain bound to a live loop across
+    # Streamlit reruns. Using asyncio.run() per query closes the loop and
+    # leaves stale connections that raise "Event loop is closed" on the next call.
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    return loop
+
+
+@st.cache_resource
 def get_pipeline():
+    # Ensure the persistent loop is the current loop when the pipeline (and its
+    # async LLM clients) are first constructed, so any loop-bound state binds
+    # to the loop we will keep reusing.
+    asyncio.set_event_loop(get_event_loop())
     return EDEPipeline()
+
+
+def run_async(coro):
+    loop = get_event_loop()
+    asyncio.set_event_loop(loop)
+    return loop.run_until_complete(coro)
 
 
 # Session state
@@ -47,12 +68,25 @@ if query:
     with st.chat_message("assistant"):
         with st.spinner("Analyzing mindset and generating response..."):
             pipeline = get_pipeline()
-            result = asyncio.run(
-                pipeline.run(
-                    query=query,
-                    session_id=st.session_state["session_id"],
+            try:
+                result = run_async(
+                    pipeline.run(
+                        query=query,
+                        session_id=st.session_state["session_id"],
+                    )
                 )
-            )
+            except Exception as e:
+                st.error(
+                    "Something went wrong while generating the response. "
+                    "Please try again."
+                )
+                with st.expander("Error details"):
+                    st.code(f"{type(e).__name__}: {e}")
+                st.session_state["messages"].append({
+                    "role": "assistant",
+                    "content": "_The previous attempt failed. Please try again._",
+                })
+                st.stop()
 
         if result["type"] == "clarification":
             st.markdown(result["question"])
